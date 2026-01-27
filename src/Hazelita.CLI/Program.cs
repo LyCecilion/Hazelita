@@ -13,9 +13,9 @@ namespace Hazelita.CLI;
 
 class Program
 {
-    private static GeometryContext context = new GeometryContext();
-    static Entity.Variable x = "x";
-    static Entity.Variable y = "y";
+    private static readonly GeometryContext context = new GeometryContext();
+    static readonly Entity.Variable x = "x";
+    static readonly Entity.Variable y = "y";
 
     static void Main(string[] args)
     {
@@ -102,7 +102,7 @@ class Program
                                 Console.WriteLine();
                                 Console.WriteLine("下面定义这条直线。");
                                 Console.WriteLine();
-                                Console.Write("  [1] 请输入 m 的值：");
+
                                 double m = InputHelper.GetDoubleInput("  [1] 请输入 m 的值：");
                                 double n = InputHelper.GetDoubleInput("  [2] 请输入 n 的值：");
                                 var line = x - (m * y + n);
@@ -154,8 +154,8 @@ class Program
                     Console.WriteLine();
                     Console.WriteLine("你想要什么样的双曲线？");
                     Console.WriteLine();
-                    Console.WriteLine("  1. 双曲线的焦点位于 x 轴上，即 x^2 / a^2 - y^2 - b^2 = 1");
-                    Console.WriteLine("  2. 双曲线的焦点位于 y 轴上，即 y^2 / a^2 - x^2 - b^2 = 1");
+                    Console.WriteLine("  1. 双曲线的焦点位于 x 轴上，即 x^2 / a^2 - y^2 / b^2 = 1");
+                    Console.WriteLine("  2. 双曲线的焦点位于 y 轴上，即 y^2 / a^2 - x^2 / b^2 = 1");
                     Console.WriteLine();
                     Console.WriteLine("请输入选项 (1/2)：");
                     switch (Console.ReadLine())
@@ -167,9 +167,9 @@ class Program
                                 Console.WriteLine();
                                 double a = InputHelper.GetNotZeroDoubleInput("  [1] 请输入 a：");
                                 double b = InputHelper.GetNotZeroDoubleInput("  [2] 请输入 b：");
-                                var ellipse = MathS.Pow(x, 2) / MathS.Pow(a, 2) - MathS.Pow(y, 2) / MathS.Pow(b, 2) - 1;
-                                context.AddConic(ellipse);
-                                Console.WriteLine($"已加入你的表达式 {ellipse}");
+                                var hyperbola = MathS.Pow(x, 2) / MathS.Pow(a, 2) - MathS.Pow(y, 2) / MathS.Pow(b, 2) - 1;
+                                context.AddConic(hyperbola);
+                                Console.WriteLine($"已加入你的表达式 {hyperbola}");
                                 break;
                             }
                         case "2":
@@ -231,6 +231,10 @@ class Program
                     }
                     break;
                 }
+            default:
+                Console.WriteLine();
+                Console.WriteLine("输入错误！请重新输入。");
+                break;
         }
     }
 
@@ -272,7 +276,7 @@ class Program
 
         var (points, distance) = context.SolveIntersection(LineNo, ConicNo);
 
-        var intersectionCount = (distance > 0) ? 2 : (points.Count != 0) ? 1 : 0;
+        var intersectionCount = points.Count;
 
         Console.WriteLine($"二者存在 {intersectionCount} 个交点。");
         Console.WriteLine();
