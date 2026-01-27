@@ -236,12 +236,19 @@ class Program
 
     static void SimultaneousEquationsOfLineAndConicSection()
     {
-        Console.WriteLine();
         if (context.Lines.Count == 0)
         {
+            Console.WriteLine();
             Console.WriteLine("列表中没有直线！请先添加直线。");
             return;
         }
+        if (context.Conics.Count == 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine("列表中没有圆锥曲线！请先添加圆锥曲线。");
+            return;
+        }
+        Console.WriteLine();
         Console.WriteLine("下面，请输入联立的直线编号：");
         Console.WriteLine();
         var a = 0;
@@ -257,11 +264,6 @@ class Program
             return;
         }
         Console.WriteLine();
-        if (context.Conics.Count == 0)
-        {
-            Console.WriteLine("列表中没有圆锥曲线！请先添加圆锥曲线。");
-            return;
-        }
         Console.WriteLine("下面，请输入联立的圆锥曲线编号：");
         Console.WriteLine();
         var b = 0;
