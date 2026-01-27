@@ -1,5 +1,6 @@
 ﻿using AngouriMath;
 using static AngouriMath.Entity;
+using Hazelita.Core;
 
 // "I put my underwear on inside out today, so now, all of you are inside my pants. Inside and outside are never
 // absolute; a single pair of inside-out underwear is enough to flip the world on its head. We assume skin and fabric
@@ -12,8 +13,7 @@ namespace Hazelita.CLI;
 
 class Program
 {
-    private static List<Entity> ConicSectionEntities = [];
-    private static List<Entity> Lines = [];
+    private static GeometryContext context = new GeometryContext();
     static Entity.Variable x = "x";
     static Entity.Variable y = "y";
 
@@ -31,7 +31,7 @@ class Program
         while (true)
         {
             Console.WriteLine();
-            Console.WriteLine($"列表内目前有 {Lines.Count} 条直线和 {ConicSectionEntities.Count} 个圆锥曲线。");
+            Console.WriteLine($"列表内目前有 {context.Lines.Count} 条直线和 {context.Conics.Count} 个圆锥曲线。");
             Console.WriteLine();
             Console.WriteLine("=== 从下方选择一个选项：===");
             Console.WriteLine();
@@ -89,20 +89,11 @@ class Program
                             {
                                 Console.WriteLine();
                                 Console.WriteLine("下面定义这条直线。");
-                                Console.Write("  [1] 请输入 k 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double k))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                Console.Write("  [2] 请输入 b 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double b))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
+                                Console.WriteLine();
+                                double k = InputHelper.GetDoubleInput("  [1] 请输入 k 的值：");
+                                double b = InputHelper.GetDoubleInput("  [2] 请输入 b 的值：");
                                 var line = y - (k * x + b);
-                                Lines.Add(line);
+                                context.AddLine(line);
                                 Console.WriteLine($"\n已加入你的表达式：{line}");
                                 break;
                             }
@@ -110,20 +101,12 @@ class Program
                             {
                                 Console.WriteLine();
                                 Console.WriteLine("下面定义这条直线。");
+                                Console.WriteLine();
                                 Console.Write("  [1] 请输入 m 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double m))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                Console.Write("  [2] 请输入 n 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double n))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
+                                double m = InputHelper.GetDoubleInput("  [1] 请输入 m 的值：");
+                                double n = InputHelper.GetDoubleInput("  [2] 请输入 n 的值：");
                                 var line = x - (m * y + n);
-                                Lines.Add(line);
+                                context.AddLine(line);
                                 Console.WriteLine($"\n已加入你的表达式 {line}");
                                 break;
                             }
@@ -131,31 +114,17 @@ class Program
                             {
                                 Console.WriteLine();
                                 Console.WriteLine("下面定义这条直线。");
-                                Console.Write("  [1] 请输入 m 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double m))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                Console.Write("  [2] 请输入 n 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double n))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
+                                Console.WriteLine();
+                                double m = InputHelper.GetDoubleInput("  [1] 请输入 m 的值：");
+                                double n = InputHelper.GetDoubleInput("  [2] 请输入 n 的值：");
                                 if (m == 0 && n == 0)
                                 {
                                     Console.WriteLine("\nm 和 n 不能同时为 0！请重新输入！");
                                     break;
                                 }
-                                Console.Write("  [3] 请输入 r 的值：");
-                                if (!double.TryParse(Console.ReadLine(), out double r))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
+                                double r = InputHelper.GetDoubleInput("  [3] 请输入 r 的值：");
                                 var line = (m * x + n * y) - r;
-                                Lines.Add(line);
+                                context.AddLine(line);
                                 Console.WriteLine($"\n已加入你的表达式 {line}");
                                 break;
                             }
@@ -173,30 +142,10 @@ class Program
                     Console.WriteLine();
                     Console.WriteLine("请将椭圆的表达式化为 x^2 / a^2 + y^2 / b^2 = 1 的形式。这里 a 和 b 是任意非 0 的实数。");
                     Console.WriteLine();
-                    Console.Write("  [1] 请输入 a：");
-                    if (!double.TryParse(Console.ReadLine(), out double a))
-                    {
-                        Console.WriteLine("\n无法解析为实数！请重新输入。");
-                        break;
-                    }
-                    else if (a == 0)
-                    {
-                        Console.WriteLine("a 不能为 0，请重新输入！");
-                        break;
-                    }
-                    Console.Write("  [2] 请输入 b：");
-                    if (!double.TryParse(Console.ReadLine(), out double b))
-                    {
-                        Console.WriteLine("\n无法解析为实数！请重新输入。");
-                        break;
-                    }
-                    else if (b == 0)
-                    {
-                        Console.WriteLine("b 不能为 0，请重新输入！");
-                        break;
-                    }
+                    double a = InputHelper.GetNotZeroDoubleInput("  [1] 请输入 a：");
+                    double b = InputHelper.GetNotZeroDoubleInput("  [2] 请输入 b：");
                     var ellipse = MathS.Pow(x, 2) / MathS.Pow(a, 2) + MathS.Pow(y, 2) / MathS.Pow(b, 2) - 1;
-                    ConicSectionEntities.Add(ellipse);
+                    context.AddConic(ellipse);
                     Console.WriteLine($"已加入你的表达式 {ellipse}");
                     break;
                 }
@@ -216,30 +165,10 @@ class Program
                                 Console.WriteLine();
                                 Console.WriteLine("请将双曲线的表达式化为 x^2 / a^2 - y^2 / b^2 = 1 的形式。这里 a 和 b 是任意非 0 的实数。");
                                 Console.WriteLine();
-                                Console.Write("  [1] 请输入 a：");
-                                if (!double.TryParse(Console.ReadLine(), out double a))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (a == 0)
-                                {
-                                    Console.WriteLine("a 不能为 0，请重新输入！");
-                                    break;
-                                }
-                                Console.Write("  [2] 请输入 b：");
-                                if (!double.TryParse(Console.ReadLine(), out double b))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (b == 0)
-                                {
-                                    Console.WriteLine("b 不能为 0，请重新输入！");
-                                    break;
-                                }
+                                double a = InputHelper.GetNotZeroDoubleInput("  [1] 请输入 a：");
+                                double b = InputHelper.GetNotZeroDoubleInput("  [2] 请输入 b：");
                                 var ellipse = MathS.Pow(x, 2) / MathS.Pow(a, 2) - MathS.Pow(y, 2) / MathS.Pow(b, 2) - 1;
-                                ConicSectionEntities.Add(ellipse);
+                                context.AddConic(ellipse);
                                 Console.WriteLine($"已加入你的表达式 {ellipse}");
                                 break;
                             }
@@ -248,30 +177,10 @@ class Program
                                 Console.WriteLine();
                                 Console.WriteLine("请将双曲线的表达式化为 y^2 / a^2 - x^2 / b^2 = 1 的形式。这里 a 和 b 是任意非 0 的实数。");
                                 Console.WriteLine();
-                                Console.Write("  [1] 请输入 a：");
-                                if (!double.TryParse(Console.ReadLine(), out double a))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (a == 0)
-                                {
-                                    Console.WriteLine("a 不能为 0，请重新输入！");
-                                    break;
-                                }
-                                Console.Write("  [2] 请输入 b：");
-                                if (!double.TryParse(Console.ReadLine(), out double b))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (b == 0)
-                                {
-                                    Console.WriteLine("b 不能为 0，请重新输入！");
-                                    break;
-                                }
+                                double a = InputHelper.GetNotZeroDoubleInput("  [1] 请输入 a：");
+                                double b = InputHelper.GetNotZeroDoubleInput("  [2] 请输入 b：");
                                 var hyperbola = MathS.Pow(y, 2) / MathS.Pow(a, 2) - MathS.Pow(x, 2) / MathS.Pow(b, 2) - 1;
-                                ConicSectionEntities.Add(hyperbola);
+                                context.AddConic(hyperbola);
                                 Console.WriteLine($"已加入你的表达式 {hyperbola}");
                                 break;
                             }
@@ -298,19 +207,9 @@ class Program
                                 Console.WriteLine();
                                 Console.WriteLine("请将抛物线的表达式化为 x^2 = 2py 的形式。这里 p 是非 0 的实数。");
                                 Console.WriteLine();
-                                Console.Write("  [1] 请输入 p：");
-                                if (!double.TryParse(Console.ReadLine(), out double p))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (p == 0)
-                                {
-                                    Console.WriteLine("p 不能为 0，请重新输入！");
-                                    break;
-                                }
+                                double p = InputHelper.GetNotZeroDoubleInput("  请输入 p：");
                                 var parabola = MathS.Pow(x, 2) - (2 * p * y);
-                                ConicSectionEntities.Add(parabola);
+                                context.AddConic(parabola);
                                 Console.WriteLine($"已加入你的表达式 {parabola}");
                                 break;
                             }
@@ -319,19 +218,9 @@ class Program
                                 Console.WriteLine();
                                 Console.WriteLine("请将抛物线的表达式化为 y^2 = 2px 的形式。这里 p 是非 0 的实数。");
                                 Console.WriteLine();
-                                Console.Write("  [1] 请输入 p：");
-                                if (!double.TryParse(Console.ReadLine(), out double p))
-                                {
-                                    Console.WriteLine("\n无法解析为实数！请重新输入。");
-                                    break;
-                                }
-                                else if (p == 0)
-                                {
-                                    Console.WriteLine("p 不能为 0，请重新输入！");
-                                    break;
-                                }
+                                double p = InputHelper.GetNotZeroDoubleInput("  请输入 p：");
                                 var parabola = MathS.Pow(y, 2) - (2 * p * x);
-                                ConicSectionEntities.Add(parabola);
+                                context.AddConic(parabola);
                                 Console.WriteLine($"已加入你的表达式 {parabola}");
                                 break;
                             }
@@ -351,13 +240,13 @@ class Program
         Console.WriteLine("下面，请输入联立的直线编号：");
         Console.WriteLine();
         var a = 0;
-        foreach (var line in Lines)
+        foreach (var line in context.Lines)
         {
-            Console.WriteLine($"  [{a}] {line}");
+            Console.WriteLine($"  [{a}] {line} = 0");
             a++;
         }
         Console.WriteLine();
-        if (!int.TryParse(Console.ReadLine(), out int LineNo) || LineNo < 0 || LineNo >= Lines.Count)
+        if (!int.TryParse(Console.ReadLine(), out int LineNo) || LineNo < 0 || LineNo >= context.Lines.Count)
         {
             Console.WriteLine("输入的直线编号有误！请重新输入。");
             return;
@@ -366,41 +255,42 @@ class Program
         Console.WriteLine("下面，请输入联立的圆锥曲线编号：");
         Console.WriteLine();
         var b = 0;
-        foreach (var conicsection in ConicSectionEntities)
+        foreach (var conicsection in context.Conics)
         {
-            Console.WriteLine($"  [{b}] {conicsection}");
+            Console.WriteLine($"  [{b}] {conicsection} = 0");
             b++;
         }
         Console.WriteLine();
-        if (!int.TryParse(Console.ReadLine(), out int ConicSectionNo) || ConicSectionNo < 0 || ConicSectionNo >= Lines.Count)
+        if (!int.TryParse(Console.ReadLine(), out int ConicNo) || ConicNo < 0 || ConicNo >= context.Conics.Count)
         {
             Console.WriteLine("输入的圆锥曲线编号有误！请重新输入。");
             return;
         }
         Console.WriteLine();
-        SimultaneousEquations(Lines[LineNo], ConicSectionEntities[ConicSectionNo]);
-    }
+        Console.WriteLine($"你选择了联立 {context.Lines[LineNo]} = 0 和 {context.Conics[ConicNo]} = 0。");
+        Console.WriteLine();
 
-    static void SimultaneousEquations(Entity a, Entity b)
-    {
-        var solution = MathS.Equations(a, b).Solve(x, y);
+        var (points, distance) = context.SolveIntersection(LineNo, ConicNo);
 
-        if (solution is Matrix solMatrix && solMatrix.RowCount >= 2)
+        var intersectionCount = (distance > 0) ? 2 : (points.Count != 0) ? 1 : 0;
+
+        Console.WriteLine($"二者存在 {intersectionCount} 个交点。");
+        Console.WriteLine();
+        if (intersectionCount > 0)
         {
-            double x1 = (double)solMatrix[0, 0].EvalNumerical();
-            double y1 = (double)solMatrix[0, 1].EvalNumerical();
-            double x2 = (double)solMatrix[1, 0].EvalNumerical();
-            double y2 = (double)solMatrix[1, 1].EvalNumerical();
-
-            double distance = Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
-
-            Console.WriteLine($"\n交点 A: ({x1:F4}, {y1:F4})");
-            Console.WriteLine($"交点 B: ({x2:F4}, {y2:F4})");
-            Console.WriteLine($"弦长 |AB|: {distance:F4}");
-        }
-        else
-        {
-            Console.WriteLine("有 1 或 0 个交点。");
+            Console.WriteLine("下面列出交点：");
+            var i = 0;
+            foreach (var point in points)
+            {
+                Console.WriteLine($"  [{i}] ({point.x}, {point.y})");
+                i++;
+            }
+            Console.WriteLine();
+            if (intersectionCount > 1)
+            {
+                Console.WriteLine($"两个交点的距离为 {distance}");
+                Console.WriteLine();
+            }
         }
     }
 }

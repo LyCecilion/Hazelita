@@ -13,4 +13,8 @@
     <PackageReference Include="AngouriMath" Version="1.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hazelita.Core\Hazelita.Core.csproj" />
+  </ItemGroup>
+
 </Project>
