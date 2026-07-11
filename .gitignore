@@ -1,5 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,rider,csharp,dotnetcore
-# Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,visualstudio,rider,csharp,dotnetcore
+# Created by https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,rider,csharp,dotnetcore,vim,direnv
+# Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,macos,visualstudio,rider,csharp,dotnetcore,vim,direnv
 
 ### Csharp ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -399,10 +399,16 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
+### direnv ###
+.direnv
+.envrc
+
 ### DotnetCore ###
 # .NET Core build folders
 bin/
 obj/
+.dotnet/
+.nuget/
 
 # Common node modules locations
 /node_modules
@@ -533,6 +539,26 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+
+### Vim ###
+# Swap
+[._]*.s[a-v][a-z]
+!*.svg  # comment out if you don't need vector files
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# Session
+Session.vim
+Sessionx.vim
+
+# Temporary
+.netrwhist
+# Auto-generated tag files
+tags
+# Persistent undo
+[._]*.un~
 
 ### Windows ###
 # Windows thumbnail cache files
@@ -736,4 +762,4 @@ $RECYCLE.BIN/
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
-# End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,rider,csharp,dotnetcore
+# End of https://www.toptal.com/developers/gitignore/api/windows,linux,macos,visualstudio,rider,csharp,dotnetcore,vim,direnv
